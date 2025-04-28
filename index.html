@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gas Leak Monitoring Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        #status {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .safe {
+            color: green;
+            font-weight: bold;
+        }
+        .danger {
+            color: red;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Gas Leak Monitoring</h1>
+
+    <div class="card">
+        <p><strong>Current Gas Value:</strong> <span id="gasValue">Loading...</span> ppm</p>
+        <p id="status">Checking...</p>
+        <p><small>Last Updated: <span id="lastUpdated">-</span></small></p>
+
+        <button onclick="refreshData()">🔄 Refresh</button>
+    </div>
+
+    <script>
+        function refreshData() {
+            // Simulate gas sensor reading for now (replace with Firebase fetch later)
+            const gasValue = Math.floor(Math.random() * 800); // random value 0-800 ppm
+            document.getElementById('gasValue').innerText = gasValue;
+
+            const statusEl = document.getElementById('status');
+            if (gasValue < 300) {
+                statusEl.innerText = 'SAFE ✅';
+                statusEl.className = 'safe';
+            } else {
+                statusEl.innerText = 'DANGER 🚨';
+                statusEl.className = 'danger';
+            }
+
+            const now = new Date();
+            document.getElementById('lastUpdated').innerText = now.toLocaleString();
+        }
+
+        // Auto-refresh once on load
+        window.onload = refreshData;
+    </script>
+
+</body>
+</html>
