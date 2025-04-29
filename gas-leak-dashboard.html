@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Leak Dashboard</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      transition: background-color 0.5s;
+    }
+    h1 {
+      font-size: 2.5em;
+    }
+    #gasValue {
+      font-size: 5em;
+      margin: 20px;
+    }
+    #status {
+      font-size: 2em;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Gas Leak Monitoring Dashboard</h1>
+  <div id="gasValue">--</div>
+  <div id="status">Loading...</div>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMLIQh03KQv2NLM9w3diG0ipLNSI-pv_o",
+      databaseURL: "https://gasleakdashboard-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const gasValueElement = document.getElementById("gasValue");
+    const statusElement = document.getElementById("status");
+
+    function updateDashboard(value, status) {
+      gasValueElement.textContent = value + " ppm";
+      statusElement.textContent = status;
+
+      if (status === "SAFE") {
+        document.body.style.backgroundColor = "#a8e6cf"; // light green
+      } else if (status === "LEAK DETECTED") {
+        document.body.style.backgroundColor = "#ff8b94"; // light red
+      } else {
+        document.body.style.backgroundColor = "white"; // default
+      }
+    }
+
+    function fetchData() {
+      database.ref("/gasSensor").on("value", (snapshot) => {
+        const data = snapshot.val();
+        const gasValue = data.value;
+        const status = data.status;
+        updateDashboard(gasValue, status);
+      });
+    }
+
+    fetchData();
+  </script>
+
+</body>
+</html>
